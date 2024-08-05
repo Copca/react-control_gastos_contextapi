@@ -3,15 +3,15 @@ import { ChangeEvent, useState, useMemo, FormEvent } from 'react';
 import { useBudget } from '../hooks/useBudget';
 
 export default function BudgetForm() {
-	const [budget, setBudget] = useState(0);
 	const { dispatch } = useBudget();
+	const [budget, setBudget] = useState(0);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setBudget(e.target.valueAsNumber);
 	};
 
-	// Validando input budget
-	const isValid = useMemo(() => isNaN(budget) || budget <= 0, [budget]);
+	// Validando input budget para activar el input submit
+	const isValid = useMemo(() => isNaN(budget!) || budget! <= 0, [budget]);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
