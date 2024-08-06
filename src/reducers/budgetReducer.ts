@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { DraftExpense, Expense } from '../types';
+import type { Category, DraftExpense, Expense } from '../types';
 
 /**
  * Actions
@@ -12,7 +12,8 @@ export type BudgetActions =
 	| { type: 'remove-expense'; payload: { id: Expense['id'] } }
 	| { type: 'get-expense-by-id'; payload: { id: Expense['id'] } }
 	| { type: 'update-expense'; payload: { expense: Expense } }
-	| { type: 'reset-app' };
+	| { type: 'reset-app' }
+	| { type: 'add-filte-category'; payload: { id: Category['id'] } };
 
 /**
  * State
@@ -33,13 +34,15 @@ export type BudgetState = {
 	modal: boolean;
 	expenses: Expense[];
 	editingId: Expense['id'];
+	currentCategory: Category['id'];
 };
 
 export const initialState: BudgetState = {
 	budget: initialBudget(),
 	modal: false,
 	expenses: initialExpenses(),
-	editingId: ''
+	editingId: '',
+	currentCategory: ''
 };
 
 /**
@@ -125,6 +128,13 @@ export const budgetReducer = (state: BudgetState, action: BudgetActions) => {
 			...state,
 			budget: 0,
 			expenses: []
+		};
+	}
+
+	if (action.type === 'add-filte-category') {
+		return {
+			...state,
+			currentCategory: action.payload.id
 		};
 	}
 
