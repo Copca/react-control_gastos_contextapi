@@ -9,7 +9,7 @@ import ErrorMessage from './ErrorMessage';
 import { useBudget } from '../hooks/useBudget';
 
 export default function ExpenseForm() {
-	const { state, dispatch } = useBudget();
+	const { state, dispatch, remainingBudget } = useBudget();
 	const [expense, setExpense] = useState<DraftExpense>({
 		amount: 0,
 		expenseName: '',
@@ -17,6 +17,7 @@ export default function ExpenseForm() {
 		date: new Date()
 	});
 	const [error, setError] = useState('');
+	const [previusAmount, setPreviusAmount] = useState(0);
 
 	// Monitoreamos el cambio en editingId
 	useEffect(() => {
@@ -26,6 +27,7 @@ export default function ExpenseForm() {
 			)[0];
 
 			setExpense(editingExpense);
+			setPreviusAmount(editingExpense.amount);
 		}
 	}, [state.editingId]);
 
@@ -52,7 +54,12 @@ export default function ExpenseForm() {
 		// validar inputs
 		if (Object.values(expense).includes('')) {
 			setError('Todos los campos son obligatorios');
+			return;
+		}
 
+		// Validar que lo gastado no sobrepase el presupuesto
+		if (expense.amount - previusAmount > remainingBudget) {
+			setError('El gasto se sale del presupuesto');
 			return;
 		}
 

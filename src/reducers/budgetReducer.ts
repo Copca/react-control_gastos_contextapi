@@ -11,7 +11,8 @@ export type BudgetActions =
 	| { type: 'add-expense'; payload: { expense: DraftExpense } }
 	| { type: 'remove-expense'; payload: { id: Expense['id'] } }
 	| { type: 'get-expense-by-id'; payload: { id: Expense['id'] } }
-	| { type: 'update-expense'; payload: { expense: Expense } };
+	| { type: 'update-expense'; payload: { expense: Expense } }
+	| { type: 'reset-app' };
 
 /**
  * State
@@ -116,6 +117,14 @@ export const budgetReducer = (state: BudgetState, action: BudgetActions) => {
 			),
 			modal: false,
 			editingId: ''
+		};
+	}
+
+	if (action.type === 'reset-app') {
+		return {
+			...state,
+			budget: 0,
+			expenses: []
 		};
 	}
 
